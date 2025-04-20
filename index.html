@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lautech Easter Greetings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff99cc, #99ff99);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff0000, #00ff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid orange;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: orange }
+        }
+
+        .powered-by {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="container py-5">
+        <h1 class="text-center logo mb-4">
+            <i class="fas fa-bullhorn"></i> Lautech News Channel
+        </h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card p-4 shadow">
+                    <h2 class="text-center mb-4">🎉 Happy Easter Submission</h2>
+                    <form id="easterForm">
+                        <div class="mb-3">
+                            <label class="form-label">Upload Image</label>
+                            <input type="file" class="form-control" accept="image/*" name="image" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nickname</label>
+                            <input type="text" class="form-control" placeholder="Enter your nickname" name="nickname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Level</label>
+                            <input type="number" class="form-control" placeholder="Enter your level" name="level" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" placeholder="Enter your department" name="department" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🎉 Submission Successful!</h5>
+                </div>
+                <div class="modal-body">
+                    <p class="typewriter">Your request is being submitted...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="shareOnWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> Share & Follow Channel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="powered-by">
+        <i class="fas fa-robot"></i> Powered by AI OF LAUTECH
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Particles.js initialization
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80 },
+                color: { value: '#ff6699' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5 },
+                size: { value: 3 },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false,
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            }
+        });
+
+        // Telegram Bot credentials
+        const BOT_TOKEN = '7552325588:AAGLbN01uyfki1AZ9eZVhheqgo1VaeG1Tqk';
+        const CHAT_ID = '7654035673';
+        const WHATSAPP_CHANNEL_LINK = 'https://whatsapp.com/channel/0029VaaVZ7lFMqrUBEbMPo1M'; // Replace with your WhatsApp channel link
+
+        document.getElementById('easterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.querySelector('.loading-spinner').style.display = 'block';
+            
+            const formData = new FormData(this);
+            
+            // Send to Telegram
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: `New Easter Submission!\n\n🎉 Nickname: ${formData.get('nickname')}\n📚 Level: ${formData.get('level')}\n🏫 Department: ${formData.get('department')}`
+                })
+            })
+            .then(response => {
+                document.querySelector('.loading-spinner').style.display = 'none';
+                new bootstrap.Modal(document.getElementById('successModal')).show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.querySelector('.loading-spinner').style.display = 'none';
+                alert('Submission failed. Please try again.');
+            });
+        });
+
+        function shareOnWhatsApp() {
+            const websiteLink = encodeURIComponent(window.location.href);
+            const message = encodeURIComponent(
+                "🎉 Happy Easter from Lautech News Channel! 🐣\n\n" +
+                "Check out our Easter greetings website:\n" +
+                `${websiteLink}\n\n` +
+                "Join our WhatsApp channel for updates:\n" +
+                `${WHATSAPP_CHANNEL_LINK}`
+            );
+            
+            window.open(`https://wa.me/?text=${message}`, '_blank');
+        }
+    </script>
+</body>
+</html>
