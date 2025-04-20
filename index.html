@@ -39,10 +39,17 @@
             border-radius: 20px;
             backdrop-filter: blur(10px);
             transition: transform 0.3s ease;
+            animation: fadeIn 0.5s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
+        }
+
+        /* Fade-in animation for the card */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .loading-spinner {
@@ -52,6 +59,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 9999;
+            text-align: center;
         }
 
         .typewriter {
@@ -79,6 +87,12 @@
             right: 10px;
             font-size: 0.8rem;
             opacity: 0.7;
+        }
+
+        /* Hover animation for the submit button */
+        button[type="submit"]:hover {
+            transform: scale(1.05);
+            transition: transform 0.2s ease;
         }
     </style>
 </head>
@@ -123,12 +137,13 @@
         </div>
     </div>
 
-    <!-- Loading Spinner -->
+    <!-- Updated Loading Spinner with larger size and message -->
     <div class="loading-spinner">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+        <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;"></div>
+        <p class="mt-2">Submitting your Easter greeting...</p>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal with updated typewriter text -->
     <div class="modal fade" id="successModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -136,7 +151,7 @@
                     <h5 class="modal-title">🎉 Submission Successful!</h5>
                 </div>
                 <div class="modal-body">
-                    <p class="typewriter">Your request is being submitted...</p>
+                    <p class="typewriter">Thank you for your submission!</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" onclick="shareOnWhatsApp()">
@@ -154,17 +169,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Particles.js initialization
+        // Updated Particles.js with pastel colors and enhanced animation
         particlesJS('particles-js', {
             particles: {
-                number: { value: 80 },
-                color: { value: '#ff6699' },
+                number: { value: 100 },
+                color: { value: ['#ffb3ba', '#ffdfba', '#ffffba', '#baffc9', '#bae1ff'] },
                 shape: { type: 'circle' },
                 opacity: { value: 0.5 },
-                size: { value: 3 },
+                size: { value: 5, random: true },
                 move: {
                     enable: true,
-                    speed: 2,
+                    speed: 3,
                     direction: 'none',
                     random: false,
                     straight: false,
@@ -192,19 +207,24 @@
             document.querySelector('.loading-spinner').style.display = 'block';
             
             const formData = new FormData(this);
-            
-            // Send to Telegram
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            const photo = formData.get('image');
+            const caption = `New Easter Submission!\n\n🎉 Nickname: ${formData.get('nickname')}\n📚 Level: ${formData.get('level')}\n🙂 Quote: ${formData.get('quote')}\n🏫 Department: ${formData.get('department')}`;
+
+            // Prepare FormData for Telegram sendPhoto
+            const telegramFormData = new FormData();
+            telegramFormData.append('chat_id', CHAT_ID);
+            telegramFormData.append('photo', photo);
+            telegramFormData.append('caption', caption);
+
+            // Send to Telegram using sendPhoto
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: `New Easter Submission!\n\n🎉 Nickname: ${formData.get('nickname')}\n📚 Level: ${formData.get('level')}\n🙂 Quote: ${formData.get('quite')}\n🏫 Department: ${formData.get('department')}`
-                })
+                body: telegramFormData
             })
             .then(response => {
                 document.querySelector('.loading-spinner').style.display = 'none';
                 new bootstrap.Modal(document.getElementById('successModal')).show();
+                e.target.reset(); // Reset the form after successful submission
             })
             .catch(error => {
                 console.error('Error:', error);
